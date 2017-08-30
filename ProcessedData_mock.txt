@@ -1,0 +1,14 @@
+outlook,temp,windy,wins,play
+sunny,85,FALSE,10,20
+sunny,80,TRUE,12,40
+overcast,83,FALSE,40,40
+rainy,70,FALSE,40,50
+rainy,65,TRUE,4,10
+overcast,64,TRUE,30,60
+sunny,72,FALSE,7,20
+sunny,69,FALSE,70,70
+rainy,75,FALSE,80,40
+sunny,75,TRUE,30,50
+overcast,72,TRUE,60,50
+overcast,81,FALSE,30,60
+rainy,71,TRUE,50,40
