@@ -26,13 +26,11 @@ while i < len(content):
     else:
         i = i + 1    
     
-
 File2 = open("clean.txt","w+")
 File2.write(content)
 File2.close()    
 File.close()
 #print "################################"
-
 
 # deleting the rows with faulty number of elements per row
 
@@ -52,7 +50,6 @@ for i in range(len(Data)):
         print 'Row number' ,i , 'was faulty and has been deleted!'
 #print holder
 Data = holder
-
 
 # deleting the column with "?" 
 
@@ -81,7 +78,6 @@ for i in range(len(Data)):
     
 File3.close()  
 File.close()
-
 
 # Runtime report
 
