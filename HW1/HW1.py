@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[10]:
-
-
 import string
 import re
 import time
@@ -31,8 +25,6 @@ while i < len(content):
         content = head + tail[content.find("\n", i)-i-1:]
     else:
         i = i + 1    
-        
-#print content
     
 
 File2 = open("clean.txt","w+")
@@ -40,9 +32,6 @@ File2.write(content)
 File2.close()    
 File.close()
 #print "################################"
-
-
-# In[11]:
 
 
 # deleting the rows with faulty number of elements per row
@@ -63,9 +52,6 @@ for i in range(len(Data)):
         print 'Row number' ,i , 'was faulty and has been deleted!'
 #print holder
 Data = holder
-
-
-# In[12]:
 
 
 # deleting the column with "?" 
@@ -95,9 +81,6 @@ for i in range(len(Data)):
     
 File3.close()  
 File.close()
-
-
-# In[13]:
 
 
 # Runtime report
