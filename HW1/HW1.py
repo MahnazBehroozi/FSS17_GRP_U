@@ -77,10 +77,8 @@ def HW1(FileName):
     
     File3.close()  
     File.close()
-
     
     # Runtime report
-
     print("---Runtime was %s seconds ---" % (time.time() - start_time))
 
 fileName = sys.argv[-1]
