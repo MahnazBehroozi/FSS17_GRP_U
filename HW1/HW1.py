@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[5]:
-
-
 import sys
 import string
 import re
@@ -33,20 +27,13 @@ def HW1(FileName):
             content = head + tail[content.find("\n", i)-i-1:]
         else:
             i = i + 1    
-        
-    #print content
     
-
     File2 = open("clean.txt","w+")
     File2.write(content)
     File2.close()    
     File.close()
-    #print "################################"
 
-
-    # In[11]:
-
-
+    
     # deleting the rows with faulty number of elements per row
 
     Data = [] # this holds the data in a list of lists (one list per row)
@@ -66,10 +53,7 @@ def HW1(FileName):
     #print holder
     Data = holder
 
-
-    # In[12]:
-
-
+    
     # deleting the column with "?" 
 
     sub = "?"
@@ -98,10 +82,7 @@ def HW1(FileName):
     File3.close()  
     File.close()
 
-
-    # In[13]:
-
-
+    
     # Runtime report
 
     print("---Runtime was %s seconds ---" % (time.time() - start_time))
