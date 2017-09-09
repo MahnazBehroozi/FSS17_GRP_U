@@ -6,10 +6,9 @@ import numpy as np
 
 def HW1(FileName):
     start_time = time.time()
-    #print FileName
+    
     # Cleaning the data for deleting the magic characters and deleting comments
 
-    #File = open("diskFile.txt","r")
     File = open(FileName,"r")
     content = File.read()
     content= re.sub('[~@!$%^&*(){}<>]','', content)
