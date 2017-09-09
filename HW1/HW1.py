@@ -66,10 +66,6 @@ def HW1(FileName):
     for i in range(len(junkColumn)):
         for row in Data:
             del row[junkColumn[i]]
-    #print Data
-
-    outarr = np.vstack(Data)
-    print (outarr)
 
     File3 = open("ProcessedData.txt","w+")
     for i in range(len(Data)):
