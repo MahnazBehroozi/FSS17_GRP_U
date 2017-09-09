@@ -6,7 +6,7 @@
 
 * Checks for bad lines (and bad lines will be skipped over); i.e. symbols where numbers should be and wrong number of cells (we will say that row1 has the “right” length).
 
-* Reports runtimes loading in POM3a.
+* Reports runtimes loading datasets.
 
 ## Files:
 
@@ -14,8 +14,9 @@
 * HW1.py: Python source code file for this assignment
 * POM3A_noisy.txt: The test file with added noisy rows to test the ability of the code to ignore bad rows in the data
 * diskFile.txt: The small data file for runing a mock example 
+* POM3A_runtime.txt : Report of runtime loading and processing POM3A.txt file.
 
 ## How to run:
 * Assuming that you have installed python 2.7, execute the command line as below in the terminal within the HW1 folder:
 
-
+`python HW1.py <file_name>`
