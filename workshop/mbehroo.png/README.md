@@ -1,0 +1,1 @@
+These are the png files that I got from changing the k in the KNN algorithm.
