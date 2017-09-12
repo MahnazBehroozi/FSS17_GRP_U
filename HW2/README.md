@@ -17,7 +17,7 @@
 
 * Assuming that you have installed python 2.7, execute the command line as below in the terminal within the HW1 folder:
 
-`python HW1.py <file_name>`
+`python HW2.py <file_name>`
 
 ## output
 
