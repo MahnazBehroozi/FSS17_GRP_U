@@ -7,6 +7,7 @@ import time
 start_time = time.time()
 
 FileName = sys.argv[-1]
+#FileName = 'TestCases.txt'
 File = open(FileName,"r")
 content = File.read()
 content= re.sub(' ','', content)
@@ -35,6 +36,7 @@ for line in File.readlines():
     
 originalLength = len(Data)
 
+
 for i in range(len(Data)):   # deleting \n from the last element of the list
     Data[i][-1] = Data[i][-1].strip()
 
@@ -47,9 +49,8 @@ for i in range(len(Data)):
         print ('Row number' ,i+1 , 'was faulty because of its length. Has been deleted!')
         DeletedCounter = DeletedCounter + 1
         
-#print holder
 Data = holder
-
+#print len(Data)
 
         
 ignore = []
@@ -131,21 +132,27 @@ for row in Data:
             #print Table.x
     else:
         if '?' in row:   # ignoring those rows with missing value
+            print('Row number' ,row_counter + DeletedCounter , 'was faulty because it contained missing values. Has been deleted!')
+            #DeletedCounter = DeletedCounter + 1
             continue
+        flag = 0
         for i in range(len(row)):  
             if i in Table.nums:
                 try:
-                    int(row[i])
+                    float(row[i])
                 except ValueError:
                     print('Row number' ,row_counter+DeletedCounter , 'was faulty because it contained a symbolic variable in the place of a numeric variable. Has been deleted!') 
+                    #DeletedCounter = DeletedCounter+1
+                    flag = 1
                     continue
-            else:
-                tempHolder.append(Data[row_counter-1])
+                
+        if flag==0:
+            tempHolder.append(Data[row_counter-1])
         row_counter = row_counter + 1
 
 print('#######################################################################################################') 
 print(tempHolder)
-
+#print(len(tempHolder))
 print('#######################################################################################################') 
 
 print("---Runtime was %s seconds ---" % (time.time() - start_time))
