@@ -11,7 +11,7 @@
 ## Files:
 
 * POM3A.txt : The input file that we have to run our code on it
-* HW1_revised.py: Python source code file for this assignment
+* HW1_revised.py: Python source code file for this assignment (after revision)
 * POM3A_noisy.txt: The test file with added noisy rows to test the ability of the code to ignore bad rows in the data
 * diskFile.txt: The small data file for runing a mock example 
 * TestCases.txt: Contains the test cases that the code should pass (The code finds 5 out of 5 errors)
