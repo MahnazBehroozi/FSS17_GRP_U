@@ -7,6 +7,7 @@ import time
 start_time = time.time()
 
 FileName = sys.argv[-1]
+FileName = 'diskFile.txt'
 File = open(FileName,"r")
 content = File.read()
 content= re.sub(' ','', content)
@@ -113,7 +114,6 @@ class Tbl():
 ############################################ 
 
 Table = Tbl()
-a = -10000000000
 
 tempHolder = []
 row_counter = 0
@@ -140,8 +140,6 @@ for row in Data:
                     a = int(row[i])
                 except ValueError:
                     continue
-                if a > -10000000000:
-                     print('Row number' ,row_counter , 'was faulty because it contained a numeric variable in the place of a symbolic variable. Has been deleted!') 
             else:
                 tempHolder.append(Data[row_counter])
         row_counter = row_counter + 1
