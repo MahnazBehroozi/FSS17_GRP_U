@@ -6,8 +6,8 @@ import time
 
 start_time = time.time()
 
-#FileName = sys.argv[-1]
-File = open("diskFile.txt","r")
+FileName = sys.argv[-1]
+File = open(FileName,"r")
 content = File.read()
 content= re.sub(' ','', content)
 index = [] # it holds the index of evey "#" 
@@ -41,7 +41,7 @@ for i in range(len(Data)):
     if len(Data[i]) == len(Data[0]):
         holder.append(Data[i])
     else:
-        print 'Row number' ,i+1 , 'was faulty because of its length. Has been deleted!'
+        print ('Row number' ,i+1 , 'was faulty because of its length. Has been deleted!')
 #print holder
 Data = holder
 
@@ -133,7 +133,7 @@ for row in Data:
                 try:
                     int(row[i])
                 except ValueError:
-                    print 'Row number' ,row_counter , 'was faulty because it contained a symbolic variable in the place of a numeric variable. Has been deleted!'
+                    print('Row number' ,row_counter , 'was faulty because it contained a symbolic variable in the place of a numeric variable. Has been deleted!') 
                     continue
             elif i in Table.syms:
                 try:
@@ -141,14 +141,14 @@ for row in Data:
                 except ValueError:
                     continue
                 if a > -10000000000:
-                     print 'Row number' ,row_counter , 'was faulty because it contained a numeric variable in the place of a symbolic variable. Has been deleted!'
+                     print('Row number' ,row_counter , 'was faulty because it contained a numeric variable in the place of a symbolic variable. Has been deleted!') 
             else:
                 tempHolder.append(Data[row_counter])
         row_counter = row_counter + 1
 
-print '#######################################################################################################'
-print tempHolder
+print('#######################################################################################################') 
+print(tempHolder)
 
-print '#######################################################################################################'
+print('#######################################################################################################') 
 
 print("---Runtime was %s seconds ---" % (time.time() - start_time))
