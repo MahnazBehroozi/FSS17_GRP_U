@@ -7,6 +7,7 @@ import time
 start_time = time.time()
 
 FileName = sys.argv[-1]
+#FileName = 'TestCases.txt'
 File = open(FileName,"r")
 content = File.read()
 content= re.sub(' ','', content)
@@ -149,9 +150,15 @@ for row in Data:
             tempHolder.append(Data[row_counter-1])
         row_counter = row_counter + 1
 
-print('#######################################################################################################') 
-print(tempHolder)
-#print(len(tempHolder))
-print('#######################################################################################################') 
+
+File3 = open("ProcessedData.txt","w+")
+for i in range(len(tempHolder)):
+    for j in range(len(tempHolder[0])):
+        if j < len(tempHolder[0])-1:
+            File3.write(str(tempHolder[i][j]) + ',')
+        else:
+            File3.write(str(tempHolder[i][j]) + '\n')
+    
+File3.close() 
 
 print("---Runtime was %s seconds ---" % (time.time() - start_time))
