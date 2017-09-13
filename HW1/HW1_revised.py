@@ -7,7 +7,6 @@ import time
 start_time = time.time()
 
 FileName = sys.argv[-1]
-#FileName = 'TestCases.txt'
 File = open(FileName,"r")
 content = File.read()
 content= re.sub(' ','', content)
