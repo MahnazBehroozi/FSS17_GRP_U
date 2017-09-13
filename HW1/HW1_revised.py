@@ -7,7 +7,6 @@ import time
 start_time = time.time()
 
 FileName = sys.argv[-1]
-FileName = 'diskFile.txt'
 File = open(FileName,"r")
 content = File.read()
 content= re.sub(' ','', content)
@@ -34,15 +33,20 @@ File = open("clean.txt","r")
 for line in File.readlines():
     Data.append(line.split(','))
     
+originalLength = len(Data)
+
 for i in range(len(Data)):   # deleting \n from the last element of the list
     Data[i][-1] = Data[i][-1].strip()
 
+DeletedCounter = 0
 holder = [] 
 for i in range(len(Data)):
     if len(Data[i]) == len(Data[0]):
         holder.append(Data[i])
     else:
         print ('Row number' ,i+1 , 'was faulty because of its length. Has been deleted!')
+        DeletedCounter = DeletedCounter + 1
+        
 #print holder
 Data = holder
 
@@ -123,7 +127,7 @@ for row in Data:
         for i in range (len(row)):
             txt = row[i][0]
             Table.categories(i,txt)
-        row_counter = 1
+        row_counter = 2
             #print Table.x
     else:
         if '?' in row:   # ignoring those rows with missing value
@@ -133,15 +137,10 @@ for row in Data:
                 try:
                     int(row[i])
                 except ValueError:
-                    print('Row number' ,row_counter , 'was faulty because it contained a symbolic variable in the place of a numeric variable. Has been deleted!') 
-                    continue
-            elif i in Table.syms:
-                try:
-                    a = int(row[i])
-                except ValueError:
+                    print('Row number' ,row_counter+DeletedCounter , 'was faulty because it contained a symbolic variable in the place of a numeric variable. Has been deleted!') 
                     continue
             else:
-                tempHolder.append(Data[row_counter])
+                tempHolder.append(Data[row_counter-1])
         row_counter = row_counter + 1
 
 print('#######################################################################################################') 
