@@ -1,16 +1,13 @@
-
-# coding: utf-8
-
-# In[35]:
-
-
 import math
 import sys
 import csv
 import re
+import time
 
-FileName = sys.argv[-1]
-#File = open("TestCases.txt","r")
+start_time = time.time()
+
+#FileName = sys.argv[-1]
+File = open("diskFile.txt","r")
 content = File.read()
 content= re.sub(' ','', content)
 index = [] # it holds the index of evey "#" 
@@ -149,5 +146,9 @@ for row in Data:
                 tempHolder.append(Data[row_counter])
         row_counter = row_counter + 1
 
+print '#######################################################################################################'
 print tempHolder
 
+print '#######################################################################################################'
+
+print("---Runtime was %s seconds ---" % (time.time() - start_time))
