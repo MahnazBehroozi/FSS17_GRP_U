@@ -14,7 +14,7 @@
 * HW1_revised.py: Python source code file for this assignment
 * POM3A_noisy.txt: The test file with added noisy rows to test the ability of the code to ignore bad rows in the data
 * diskFile.txt: The small data file for runing a mock example 
-* TestCases.txt: Contains the test cases that the code should pass
+* TestCases.txt: Contains the test cases that the code should pass (The code finds 5 out of 5 errors)
 
 ## How to run:
 * Assuming that you have installed python 2.7, execute the command line as below in the terminal within the HW1 folder:
@@ -25,4 +25,4 @@
 
 * Prints faulty rows of the input file and mentions why they were faulty
 * Prints the runtime 
-* Prints processed data 
+* Writes processed data in a file named as ProcessedData.txt
