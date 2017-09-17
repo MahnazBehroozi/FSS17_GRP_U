@@ -5,12 +5,14 @@ import csv
 ignore = []
 ArrayOfNumObj = []
 ArrayOfSymObj = []
+#goals = []
+#weight = []
 
 class Tbl():
     def __init__(self):
         self.rows = []
         self.spec = []
-        self.goals = []
+        self.goals = [] 
         self.less = []
         self.more = []
         self.name = []
@@ -63,7 +65,13 @@ class Tbl():
             self.all.append(i)
         
         return self.nums, self.syms, self.all, self.x, self.y, self.weight
-  
+    
+    def update(self,row):
+        self.items = []
+        for i in range(len(row)):
+            self.items.append(row[i])
+        self.rows.append(self.items)
+        return self.rows
 ############################################
 
 class Row():
@@ -87,9 +95,9 @@ class num():
         if i not in ignore:       
             self.n = self.n + 1
             if x < self.lo:
-                self.lo = x
+                self.lo = float(x)
             if x > self.hi:
-                self.hi = x
+                self.hi = float(x)
             delta = float(x) - self.mu
             self.mu = self.mu + delta / self.n
             self.m2 = self.m2 + delta * (float(x) - self.mu)
@@ -102,7 +110,12 @@ class num():
         if i in ignore:
             return x
         else:
-            (x - self.lo)/(self.hi - self.lo + math.exp(-32))
+            print '&&&&&&&&&&&&&&'
+            print self.lo
+            print self.hi
+            print x
+            print '&&&&&&&&&&&&&'
+            return (float(x) - self.lo)/(self.hi - self.lo + math.exp(-32))
             
 ############################################ 
 
@@ -141,13 +154,45 @@ class sym():
     
 ################################################
 
+def dominate1(i,j,t, Num):
+    e = 2.71828
+    n = len(t.goals)
+    sum1 = 0
+    sum2 = 0
+    temp = 0
+    
+    for index in range(len(t.goals)):
+        ind = t.goals[index]
+        #print t.rows
+        #print t.rows[j]
+        w = t.weight[ind]
+        x = Num[ind].norm(ind, t.rows[i][ind])
+        y = Num[ind].norm(ind, t.rows[j][ind])
+        print x
+        print y
+        print '###################'
+        sum1 = sum1 - e**(w * (float(x)-float(y))/n)
+        sum2 = sum2 - e**(w * (float(y)-float(x))/n) 
+        if sum1/n < sum2/n:
+            temp = temp + 1       # shows how many times i dominates j
+    print temp
+    return temp
+
+#def dominate(i,t):
+ #   tmp = 0
+    
+
+################################################
+
 Table = Tbl()
-Num = num()
+
 Sym = sym()
 
-FileName = sys.argv[-1]
-#FileName = 'auto.csv'
+#FileName = sys.argv[-1]
+FileName = 'auto.csv'
 row_counter = 0
+Num_objectHolder = []
+Sym_objectHolder = []
 with open(FileName, 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for row in reader:
@@ -173,12 +218,14 @@ with open(FileName, 'rb') as csvfile:
                         
                 if i in Table.nums:
                     index = Table.nums.index(i)
-                    globals()['Num%s' % Table.nums[index]].update(index, row[i])
+                    Num_objectHolder.append(globals()['Num%s' % Table.nums[index]].update(index, row[i]))
                     #print Num1.mu
                 
                
                 if i in Table.syms:
                     index = Table.syms.index(i)
-                    globals()['Sym%s' % Table.syms[index]].update(index, row[i])
+                    Sym_objectHolder.append(globals()['Sym%s' % Table.syms[index]].update(index, row[i]))
                     #print Sym0.most
-
+                Table.update(row)
+    #print Table.rows 
+    dominate1(1,5,Table, Num_objectHolder)
