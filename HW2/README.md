@@ -6,11 +6,10 @@
 * Headers are either Nums or Syms as determined by the magic characters in row1.
 * Num and Syms incremental maintain knowledge about mean, standard deviation, and symbol counts in a column. 
 * When the table reads row1, it builds the headers of Nums and Syms. And when the other rows are read, the headers get updated.
-* *Dominate function has not been added yet*
 
 ## Files:
 
-* auto.txt : The input file that we have to run our code on it
+* auto.csv : The input file that we have to run our code on it
 * HW2.py: Python source code file for this assignment
 
 ## How to run:
@@ -21,4 +20,4 @@
 
 ## output
 
-* Uncomment lines 177 and 183 to see an example of how the code gives reports on mean and the mode for num and sym variables respectively. 
+* It prints the header of the csv file following by the top 5 dominant rows and the bottom 5 dominant rows of the data based on the goal features 
