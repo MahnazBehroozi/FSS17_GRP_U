@@ -1,3 +1,9 @@
+
+# coding: utf-8
+
+# In[113]:
+
+
 import math
 import sys
 import csv
@@ -5,8 +11,6 @@ import csv
 ignore = []
 ArrayOfNumObj = []
 ArrayOfSymObj = []
-#goals = []
-#weight = []
 
 class Tbl():
     def __init__(self):
@@ -18,7 +22,6 @@ class Tbl():
         self.name = []
         self.nums = []
         self.syms = []
-        #self.cols = []
         self.weight = []
         global ignore           # holds the indeces of the columns that should be ignored
         self.all = []               # holds all the categories 
@@ -66,17 +69,13 @@ class Tbl():
         
         return self.nums, self.syms, self.all, self.x, self.y, self.weight
     
-    def update(self,row):
+    def TblUpdate(self,row):
         self.items = []
         for i in range(len(row)):
             self.items.append(row[i])
         self.rows.append(self.items)
+        
         return self.rows
-############################################
-
-class Row():
-    def __init__(self):
-        pass
         
 ############################################ 
 
@@ -91,12 +90,12 @@ class num():
         self.w = 1
         pass
     
-    def update(self,i,x):
+    def NumUpdate(self,i,x):
         if i not in ignore:       
             self.n = self.n + 1
-            if x < self.lo:
+            if float(x) < self.lo:
                 self.lo = float(x)
-            if x > self.hi:
+            if float(x) > self.hi:
                 self.hi = float(x)
             delta = float(x) - self.mu
             self.mu = self.mu + delta / self.n
@@ -110,11 +109,6 @@ class num():
         if i in ignore:
             return x
         else:
-            print '&&&&&&&&&&&&&&'
-            print self.lo
-            print self.hi
-            print x
-            print '&&&&&&&&&&&&&'
             return (float(x) - self.lo)/(self.hi - self.lo + math.exp(-32))
             
 ############################################ 
@@ -130,7 +124,7 @@ class sym():
         self._ent = None
         pass
     
-    def update(self,i,x):
+    def SymUpdate(self,i,x):
         if i not in ignore:
             self.n = self.n + 1
             self._ent = None
@@ -159,37 +153,25 @@ def dominate1(i,j,t, Num):
     n = len(t.goals)
     sum1 = 0
     sum2 = 0
-    temp = 0
+    temp_i = 0
     
     for index in range(len(t.goals)):
         ind = t.goals[index]
-        #print t.rows
-        #print t.rows[j]
         w = t.weight[ind]
         x = Num[ind].norm(ind, t.rows[i][ind])
         y = Num[ind].norm(ind, t.rows[j][ind])
-        print x
-        print y
-        print '###################'
         sum1 = sum1 - e**(w * (float(x)-float(y))/n)
         sum2 = sum2 - e**(w * (float(y)-float(x))/n) 
         if sum1/n < sum2/n:
-            temp = temp + 1       # shows how many times i dominates j
-    print temp
-    return temp
-
-#def dominate(i,t):
- #   tmp = 0
-    
+            temp_i = temp_i + 1       # shows how many times i dominates j
+    return sum1/n < sum2/n
 
 ################################################
 
 Table = Tbl()
 
-Sym = sym()
-
-#FileName = sys.argv[-1]
-FileName = 'auto.csv'
+FileName = sys.argv[-1]
+#FileName = 'auto.csv'
 row_counter = 0
 Num_objectHolder = []
 Sym_objectHolder = []
@@ -197,35 +179,92 @@ with open(FileName, 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for row in reader:
         if row_counter == 0:
+            print row
             for i in range (len(row)):
                 txt = row[i][0]
                 Table.categories(i,txt)
+            for j in range(len(Table.nums)):
+                globals()['Num%s' % Table.nums[j]] = num()
+                        
+            for j in range(len(Table.syms)):
+                globals()['Sym%s' % Table.syms[j]] = sym()
             row_counter = 1
-            #print Table.x
         
         else:
             if '?' in row:   # ignoring those rows with missing value
-                continue
-            for i in range(len(row)):
-                if row_counter == 1:
-                    for j in range(len(Table.nums)):
-                        globals()['Num%s' % Table.nums[j]] = num()
-                        
-                    for j in range(len(Table.syms)):
-                        globals()['Sym%s' % Table.syms[j]] = sym()
-                        
-                row_counter = row_counter + 1        
-                        
+                continue   
+                
+            else:
                 if i in Table.nums:
                     index = Table.nums.index(i)
-                    Num_objectHolder.append(globals()['Num%s' % Table.nums[index]].update(index, row[i]))
-                    #print Num1.mu
-                
+                    Num_objectHolder.append(globals()['Num%s' % Table.nums[index]].NumUpdate(i, row[i]))
+
                
                 if i in Table.syms:
                     index = Table.syms.index(i)
-                    Sym_objectHolder.append(globals()['Sym%s' % Table.syms[index]].update(index, row[i]))
-                    #print Sym0.most
-                Table.update(row)
-    #print Table.rows 
-    dominate1(1,5,Table, Num_objectHolder)
+                    Sym_objectHolder.append(globals()['Sym%s' % Table.syms[index]].SymUpdate(i, row[i]))
+            Table.TblUpdate(row)
+
+FirstDomHolder = [] 
+dom = 0
+
+for domNumber in range(5):
+    iterate = len(Table.rows)
+    i = 0
+    j = 1
+    while iterate > 1 and i<len(Table.rows) and j<len(Table.rows):
+        if j in FirstDomHolder:
+            j = j + 1
+            iterate = iterate - 1
+        elif i in FirstDomHolder:
+            i = i + 1
+            dom = i
+            
+        
+        if dominate1(i,j,Table, Num_objectHolder):
+            dom = i
+            j = j + 1
+        else:
+            iterate = iterate - j
+            i = j
+            j = i + 1
+             
+    FirstDomHolder.append(dom)
+    
+    
+LastDomHolder = [] 
+dom = 0
+
+for domNumber in range(5):
+    iterate = len(Table.rows)
+    i = 0
+    j = 1
+    while iterate > 1 and i<len(Table.rows) and j<len(Table.rows):
+        if j in LastDomHolder:
+            j = j + 1
+            iterate = iterate - 1
+        elif i in LastDomHolder:
+            i = i + 1
+            dom = i
+            
+        if not dominate1(i,j,Table, Num_objectHolder):
+            dom = i
+            j = j + 1
+        else:
+            iterate = iterate - j
+            i = j
+            j = i + 1
+             
+    LastDomHolder.append(dom)
+
+print "\n"   
+#print "Top 5 dominant records:\n"
+for i in FirstDomHolder:
+    print Table.rows[i]
+print "\n\n"
+
+#print "Bottom 5 dominate records:"
+j = len(LastDomHolder) - 1
+for i in LastDomHolder:
+    print Table.rows[LastDomHolder[j]]
+    j = j - 1
