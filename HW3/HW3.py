@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[65]:
-
-
 import math
 import sys
 import csv
@@ -244,10 +238,4 @@ with open(FileName, 'rb') as csvfile:
 [SplitInd,T, epsilon] = Unsup_InitialSplitIndex(Table.rows,4)
 print epsilon
 span = Unsup_span(T,SplitInd)
-
-
-# In[ ]:
-
-
-
 
