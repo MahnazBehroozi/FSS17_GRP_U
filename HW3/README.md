@@ -10,7 +10,7 @@ Unsupervised Discretization: Write code that takes a table column of N numbers, 
 
 Supervised Discretization: Write code that reflects over the ranges found by the unsupervised discretizer. Combine ranges where some dependent variable is not changed across that combination of ranges. Specifically, sort the ranges and do a recursive descent of the ranges. At each level of the recursion, break the ranges at the point that most minimizes the expected value of the standard deviation of the dependent variable.
 
-# How to run:
+## How to run:
 * Assuming that you have installed python 2.7, execute the command line as below in the terminal within the HW1 folder:
 
 `python HW3.py`
