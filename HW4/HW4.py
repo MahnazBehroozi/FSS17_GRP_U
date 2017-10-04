@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[21]:
-
-
 import math
 import sys
 import csv
