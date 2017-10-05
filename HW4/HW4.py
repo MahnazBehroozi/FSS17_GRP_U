@@ -1,6 +1,7 @@
 import math
 import sys
 import csv
+import numpy as np
 
 ignore = []
 ArrayOfNumObj = []
@@ -16,6 +17,7 @@ class Tbl():
         self.name = []
         self.nums = []
         self.syms = []
+        self.cols = []
         self.weight = []
         global ignore           # holds the indeces of the columns that should be ignored
         self.all = []               # holds all the categories 
@@ -163,6 +165,7 @@ def dominate1(i,j,t, Num):
 ################################################
 def Unsupervised(TableColumn):
     data = TableColumn
+    oldIndices = sorted(range(len(data)), key=lambda k: data[k]) # returns the old index of the elements after sorting 
     n = len(data)
     data = sorted(data)
     epsilon = 0.2*(np.std(data))
@@ -181,76 +184,42 @@ def Unsupervised(TableColumn):
         binIndeces.append(i)
         
         if (i + int(binSize) - 1) < n-1:
-            print "%d:"%counter, "Range size = %d" %(i-startIndex), ", span = %f" %span(data,startIndex,i), ", lo = %.10f" % min(data[startIndex:i]), ", hi = %.10f" % max(data[startIndex:i])
+            #print "%d:"%counter, "Range size = %d" %(i-startIndex), ", span = %f" %span(data,startIndex,i), ", lo = %.10f" % min(data[startIndex:i]), ", hi = %.10f" % max(data[startIndex:i])
             counter = counter + 1
             startIndex = i 
             i = i + int(binSize) 
         else: 
-            print "%d:"%counter, "Range size = %d" %(len(data)-startIndex), ", span = %f" %span(data,startIndex,i), ", lo = %.10f" % min(data[startIndex:i]), ", hi = %.10f" % max(data[startIndex:i])
+            #print "%d:"%counter, "Range size = %d" %(len(data)-startIndex), ", span = %f" %span(data,startIndex,i), ", lo = %.10f" % min(data[startIndex:i]), ", hi = %.10f" % max(data[startIndex:i])
             break
             
         
-    return binIndeces,data
+    return oldIndices, binIndeces,data
 
 ###############################################################
 
-def supervised(data,labels):
-    ranges = []
-    for i in range(len(labels)+1):
-        globals()['range%s' % str(i+1)] = []
-    number = 2
-    i = 0
-    for j in range(len(labels)):
-    
-        while j==0 and data[i] < labels[j]:
-            range1.append(data[i])
-            i = i + 1
-            if i > len(data)-1:
-                break
-        if j == 0:
-            ranges.append(range1)
-                
-        while i < len(data)-1 and j < len(labels)-1 and labels[j] <= data[i] and data[i] < labels[j+1]:
-            globals()['range%s' % str(number)].append(data[i])
-            i = i + 1
-            if i > len(data)-1:
-                    break 
-        if number < len(labels) + 1:     
-            ranges.append(globals()['range%s' % str(number)])
-            number = number + 1
-            
-        while j == len(labels) - 1 and data[i] >= labels[j]:
-            globals()['range%s' % str(number)].append(data[i])
-            i = i + 1
-            if i > len(data)-1:
-                break
-
-    ranges.append(globals()['range%s' % str(number)])
-    counter = 1
-    for i in range(len(ranges)):
-        print "Label = %d:"%counter, "most = %.10f" %ranges[i][len(ranges[i])-1]
-        counter = counter + 1
+#def supervised(data,binIndeces,stdScore):
+    #for i in range(len(binIndeces)):
         
-    return ranges
-
-
-def span(data,startingIndex, endIndex):
-    delta = max(data[startingIndex:endIndex]) - min(data[startingIndex:endIndex])
-    return delta
 ####################################################################################
 
-def sortDom(domHolder,Table,features):
-    dom = 0
-    temp = Table
-    for i in range(len(Table.rows)):
-         if dominate1(dom,i,Table, features):   
-            dom = i
-    domHolder.append(dom)        
-    del temp[dom]
-    sortDom(domHolder,temp,features)
-
-    return domHolder        
-            
+def stdScoreCal(data,binIndeces):
+    begin = 0
+    score = 0
+    for j in range(len(binIndeces)):
+        if j == len(binIndeces)-1:
+            score = score + (np.std(data[binIndeces[j]:]))*(len(data)-binIndeces[j])
+        else:
+            score = score + (np.std(data[begin:binIndeces[j]]))*(binIndeces[j]-begin)
+            begin = binIndeces[j]
+    score = score/len(data)
+    return score
+####################################################################################
+# This function gets a list of lists and returns a column of it (index)
+def columnWise(List,index):
+    col = []
+    for i in range(len(List)):
+        col.append(float(List[i][index]))
+    return col
 #####################################################################################            
 Table = Tbl()
 
@@ -259,19 +228,16 @@ FileName = 'auto.csv'
 row_counter = 0
 Num_objectHolder = []
 Sym_objectHolder = []
+dataHolder = []
 with open(FileName, 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for row in reader:
         if row_counter == 0:
-            print row
             for i in range (len(row)):
                 txt = row[i][0]
                 Table.categories(i,txt)
             for j in range(len(Table.nums)):
                 globals()['Num%s' % Table.nums[j]] = num()
-                        
-            for j in range(len(Table.syms)):
-                globals()['Sym%s' % Table.syms[j]] = sym()
             row_counter = 1
         
         else:
@@ -279,18 +245,22 @@ with open(FileName, 'rb') as csvfile:
                 continue   
                 
             else:
+                dataHolder.append(row)
                 if i in Table.nums:
                     index = Table.nums.index(i)
                     Num_objectHolder.append(globals()['Num%s' % Table.nums[index]].NumUpdate(i, row[i]))
 
-               
-                if i in Table.syms:
-                    index = Table.syms.index(i)
-                    Sym_objectHolder.append(globals()['Sym%s' % Table.syms[index]].SymUpdate(i, row[i]))
             Table.TblUpdate(row)
             
-
-domHolder = []
-sortDom(domHolder,Table, Num_objectHolder)
- 
-
+stdScoreHolder = []
+oldIndicesHolder = []
+binIndecesHolder = []
+#print dataHolder
+for i in range(len(Table.nums)-1):
+    #columnWise(dataHolder,i)         
+    [oldIndices, binIndeces, data] = Unsupervised(columnWise(dataHolder,i+1))
+    score = stdScoreCal(data,binIndeces)
+    stdScoreHolder.append(score)
+    #print binIndeces
+    #print oldIndices
+print stdScoreHolder
